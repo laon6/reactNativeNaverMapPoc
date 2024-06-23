@@ -21,5 +21,6 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+        <activity android:name=".MapActivity" /> <!-- 새로 추가된 부분 -->
     </application>
 </manifest>

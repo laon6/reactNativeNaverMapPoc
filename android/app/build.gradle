@@ -2,6 +2,15 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        localProperties.load(stream)
+    }
+}
+
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -81,6 +90,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        // 환경 변수를 BuildConfig에 추가
+        buildConfigField "String", "NAVER_CLIENT_ID", "\"${localProperties['NAVER_CLIENT_ID']}\""
+//        multiDexEnabled true // 필요한 경우 추가
     }
     signingConfigs {
         debug {
@@ -102,13 +115,28 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    // 네이버 지도 SDK
+    implementation("com.naver.maps:map-sdk:3.18.0")
 
-    if (hermesEnabled.toBoolean()) {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+
+
+    if (project.hasProperty("hermesEnabled") && hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
