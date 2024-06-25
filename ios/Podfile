@@ -1,11 +1,10 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
+platform :ios, '13.4' # or your project's minimum iOS version
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -23,6 +22,10 @@ target 'reactNativeNaverMapPoc' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # 네이버 지도 SDK 추가
+  pod 'NMapsMap'
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'reactNativeNaverMapPocTests' do
     inherit! :complete
     # Pods for testing
@@ -36,5 +39,12 @@ target 'reactNativeNaverMapPoc' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # 추가적인 설정 (필요한 경우)
+#     installer.pods_project.targets.each do |target|
+#       target.build_configurations.each do |config|
+#         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+#       end
+#     end
   end
 end

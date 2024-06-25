@@ -1,14 +1,22 @@
 import React from 'react';
-import {Button, NativeModules, View} from 'react-native';
-
-const {NaverMapModule} = NativeModules;
+import { SafeAreaView, StyleSheet } from 'react-native';
+import MapView from './NaverMapView';
 
 const App = () => {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Button title="Show Naver Map" onPress={() => NaverMapModule.showMap()} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <MapView style={styles.map} />
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+});
 
 export default App;
